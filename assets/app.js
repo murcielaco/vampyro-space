@@ -103,5 +103,16 @@
   s.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')return;down=true;moved=0;x0=e.clientX;l0=s.scrollLeft;s.classList.add('drag');});
   addEventListener('pointermove',function(e){if(!down)return;moved=e.clientX-x0;s.scrollLeft=l0-moved;});
   addEventListener('pointerup',function(){if(!down)return;down=false;s.classList.remove('drag');var k=Math.round(l0/s.clientWidth);if(Math.abs(moved)>50)k+=moved<0?1:-1;go(Math.max(0,Math.min(n-1,k)));});
+  s.addEventListener('click',function(e){if(Math.abs(moved)>6){e.preventDefault();moved=0;}},true);
   s.tabIndex=0;s.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(idx()+1);if(e.key==='ArrowLeft')go(idx()-1);});
+})();
+
+/* grid size: 2 or 4 per row (remembered on this device) */
+(function(){
+  var g=document.getElementById('grid');if(!g)return;
+  var btns=[].slice.call(document.querySelectorAll('[data-cols]'));
+  function set(n){g.classList.toggle('g4',n==='4');btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.cols===n?'true':'false');});try{localStorage.setItem('vp-cols',n);}catch(e){}}
+  var saved=null;try{saved=localStorage.getItem('vp-cols');}catch(e){}
+  if(saved==='4')set('4');
+  btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.cols);});});
 })();
