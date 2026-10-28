@@ -29,13 +29,15 @@ a.br:hover::after,button.br:hover::after{transform:translateX(4px)}
 .hd.line{border-color:var(--line)}
 .hd nav{display:flex;gap:22px}
 .hd nav.r{justify-content:flex-end}
+.hd nav{align-items:center}
+.hd .wm{display:flex;align-items:center;margin-right:clamp(10px,2vw,30px)}
+.hd .wm svg{height:13px;width:auto}
 .hd .mark{display:flex;align-items:center;justify-content:center}
-.hd .mark svg{height:17px;width:auto}
-.hd .mark .bat{height:15px;margin-right:12px}
+.hd .mark svg{height:30px;width:auto}
 .hd a{color:var(--ink)}
 .hd .muted{color:var(--mute)}
 @media(min-width:641px){.show-s{display:none!important}}
-@media(max-width:640px){.hide-s{display:none!important}.hd .mark .bat{display:none}.hd .mark svg{height:14px}}
+@media(max-width:640px){.hide-s{display:none!important}.hd nav{gap:14px}.hd .wm svg{height:11px}.hd .mark svg{height:24px}}
 
 /* hero */
 .hero{padding:clamp(28px,6vw,90px) var(--pad) 0}
