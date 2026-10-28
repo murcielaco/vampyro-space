@@ -63,8 +63,11 @@
     if(!size){msg.textContent='[ Select your size ]';var g=document.querySelector('.sizes');g&&g.scrollIntoView({behavior:'smooth',block:'center'});return;}
     var id=P.variants[color];if(!id)return;
     var props=b64url(JSON.stringify({'Size-Type-Custom':sys+' '+size}));
-    buy.querySelector('span').textContent='Redirecting';
-    location.href='https://shop.zellerfeld.com/cart/'+id+':1?properties='+props;
+    var url='https://shop.zellerfeld.com/cart/'+id+':1?properties='+props;
+    /* checkout opens in a new tab so vampyro.space stays open behind it */
+    var w=window.open(url,'_blank','noopener');
+    if(!w){var a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();}
+    msg.textContent='[ Checkout opened in a new tab ]';
   });
 
   addEventListener('pageshow',function(){if(buy)buy.querySelector('span').textContent='Buy now';});
