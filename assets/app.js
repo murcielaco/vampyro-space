@@ -136,7 +136,8 @@
   var cards=[].slice.call(document.querySelectorAll('#grid .card')),n=document.getElementById('nModels');
   function set(c){btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.cat===c?'true':'false');});var k=0;cards.forEach(function(e){var on=c==='all'||e.dataset.cat===c;e.hidden=!on;if(on){k++;e.classList.add('in');}});if(n)n.textContent=k+(k===1?' Model':' Models');}
   btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.cat);});});
-  var h=location.hash.slice(1).toLowerCase();btns.forEach(function(b){if(b.dataset.cat.toLowerCase()===h){set(b.dataset.cat);var t=document.getElementById('shop');t&&t.scrollIntoView();}});
+  /* opens on Footwear; #accessories or #all in the link opens that one */
+  var h=location.hash.slice(1).toLowerCase(),hit=false;btns.forEach(function(b){if(b.dataset.cat.toLowerCase()===h){hit=true;set(b.dataset.cat);var t=document.getElementById('shop');t&&t.scrollIntoView();}});if(!hit)set('Footwear');
 })();
 
 /* cart + checkout
