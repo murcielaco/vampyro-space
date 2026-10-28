@@ -102,7 +102,8 @@ a.br:hover::after,button.br:hover::after{transform:translateX(4px)}
 .ttl .sub .p{color:var(--ink)}
 .opt .lab{display:flex;justify-content:space-between;color:var(--mute);margin-bottom:12px}
 .opt .lab b{font-weight:400;color:var(--ink)}
-.colors{display:flex;gap:26px}
+.colors,.systems{display:flex;gap:26px;flex-wrap:wrap}
+.systems{gap:20px;margin-bottom:14px}
 .choice{position:relative;color:var(--mute);transition:color .2s}
 .choice::before,.choice::after{opacity:0;transition:opacity .2s,transform .35s cubic-bezier(.2,.7,.2,1)}
 .choice:hover{color:var(--ink)}

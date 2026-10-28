@@ -16,7 +16,7 @@
   var imgs=[].slice.call(document.querySelectorAll('#gal img'));
   var colorLabel=document.getElementById('colorLabel');
 
-  function src(view,w){return '/assets/img/'+P.slug+'-'+color+'-'+view+'-'+w+'.webp';}
+  function src(view,w){return '/assets/img/'+P.slug+'-'+color+'-'+view+'-'+w+'.jpg';}
   function setColor(c){
     if(c===color)return;color=c;
     [].forEach.call(document.querySelectorAll('[data-color]'),function(b){b.setAttribute('aria-pressed',b.dataset.color===c?'true':'false');});
@@ -31,26 +31,30 @@
   }
   [].forEach.call(document.querySelectorAll('[data-color]'),function(b){b.addEventListener('click',function(){setColor(b.dataset.color);});});
   /* preload the other color */
-  addEventListener('load',function(){P.views.forEach(function(v){var i=new Image();i.src='/assets/img/'+P.slug+'-stone-'+v+'-1600.webp';});});
+  addEventListener('load',function(){P.views.forEach(function(v){var i=new Image();i.src='/assets/img/'+P.slug+'-stone-'+v+'-1600.jpg';});});
 
   /* gallery dots on mobile */
   var gal=document.getElementById('gal'),dots=[].slice.call(document.querySelectorAll('#dots i'));
   if(gal&&dots.length){gal.addEventListener('scroll',function(){var k=Math.round(gal.scrollLeft/gal.clientWidth);dots.forEach(function(d,j){d.classList.toggle('on',j===k);});},{passive:true});}
 
-  /* sizes (US men) and approximate conversions */
-  var EU={4:36,4.5:36.5,5:37.5,5.5:38,6:38.5,6.5:39,7:40,7.5:40.5,8:41,8.5:42,9:42.5,9.5:43,10:44,10.5:44.5,11:45,11.5:45.5,12:46,12.5:47,13:47.5,13.5:48};
-  function eu(s){return EU[s]!=null?EU[s]:(48+(s-13.5)*1).toString().replace(/\.0$/,'');}
-  var sizeLabel=document.getElementById('sizeLabel'),conv=document.getElementById('conv'),msg=document.getElementById('msg');
-  [].forEach.call(document.querySelectorAll('[data-size]'),function(b){
-    b.addEventListener('click',function(){
+  /* sizes: every system Zellerfeld offers (value sent as "USM 10", "USW 8.5", "UK 9.5", "EU 43") */
+  function rng(a,b){var r=[];for(var x=a;x<=b+1e-9;x+=.5)r.push(String(x));return r;}
+  var SYS={USM:{label:'US M',list:rng(4,21)},USW:{label:'US W',list:rng(5.5,22.5)},UK:{label:'UK',list:rng(3,20)},EU:{label:'EU',list:rng(36.5,58)}};
+  var sys='USM',grid=document.getElementById('sizes'),sizeLabel=document.getElementById('sizeLabel'),msg=document.getElementById('msg');
+  function draw(){
+    if(!grid)return;
+    grid.innerHTML=SYS[sys].list.map(function(v){return '<button type="button" role="radio" aria-checked="false" data-size="'+v+'">'+v+'</button>';}).join('');
+    size=null;sizeLabel.textContent='Select';
+    [].forEach.call(grid.querySelectorAll('[data-size]'),function(b){b.addEventListener('click',function(){
       size=b.dataset.size;
-      [].forEach.call(document.querySelectorAll('[data-size]'),function(x){x.setAttribute('aria-checked',x===b?'true':'false');});
-      var s=parseFloat(size);
-      sizeLabel.textContent='US M '+size;
-      conv.textContent='≈ EU '+eu(s)+'  ·  UK '+(s-1)+'  ·  US W '+(s+1.5);
-      if(msg)msg.textContent='';
-    });
-  });
+      [].forEach.call(grid.querySelectorAll('[data-size]'),function(x){x.setAttribute('aria-checked',x===b?'true':'false');});
+      sizeLabel.textContent=SYS[sys].label+' '+size;if(msg)msg.textContent='';
+    });});
+  }
+  [].forEach.call(document.querySelectorAll('[data-sys]'),function(b){b.addEventListener('click',function(){
+    sys=b.dataset.sys;[].forEach.call(document.querySelectorAll('[data-sys]'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});draw();
+  });});
+  draw();
 
   /* buy: straight to Zellerfeld checkout with model, color and size */
   function b64url(str){return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
@@ -58,7 +62,7 @@
   if(buy)buy.addEventListener('click',function(){
     if(!size){msg.textContent='[ Select your size ]';var g=document.querySelector('.sizes');g&&g.scrollIntoView({behavior:'smooth',block:'center'});return;}
     var id=P.variants[color];if(!id)return;
-    var props=b64url(JSON.stringify({'Size-Type-Custom':'USM '+size}));
+    var props=b64url(JSON.stringify({'Size-Type-Custom':sys+' '+size}));
     buy.querySelector('span').textContent='Redirecting';
     location.href='https://shop.zellerfeld.com/cart/'+id+':1?properties='+props;
   });
