@@ -36,8 +36,12 @@ a.br:hover::after,button.br:hover::after{transform:translateX(4px)}
 .hd .mark svg{height:30px;width:auto}
 .hd a{color:var(--ink)}
 .hd .muted{color:var(--mute)}
+.nl::before{content:"[";margin-right:.45em}.nl::after{content:"]";margin-left:.45em}
+.nl::before,.nl::after{opacity:0;display:inline-block;transition:opacity .25s,transform .35s cubic-bezier(.2,.7,.2,1)}
+.nl.on::before,.nl.on::after{opacity:1}
+.nl:not(.on):hover::before,.nl:not(.on):hover::after{opacity:.35}
 @media(min-width:641px){.show-s{display:none!important}}
-@media(max-width:640px){.hide-s{display:none!important}.hd nav{gap:14px}.hd .wm svg{height:11px}.hd .mark svg{height:24px}}
+@media(max-width:640px){.hide-s{display:none!important}.hd nav{gap:14px}.hd .mark svg{height:26px}}
 
 /* hero */
 .hero{padding:clamp(28px,6vw,90px) var(--pad) 0}
@@ -45,10 +49,16 @@ a.br:hover::after,button.br:hover::after{transform:translateX(4px)}
 .hero .word svg{width:100%;height:auto;display:block}
 .hero .meta{display:flex;justify-content:space-between;gap:20px;margin-top:18px;color:var(--mute)}
 .hero .meta b{font-weight:400;color:var(--ink)}
-.feature{display:block;position:relative;margin:clamp(28px,5vw,70px) 0 0;background:var(--paper)}
-.feature img{width:100%;height:auto;aspect-ratio:16/7;object-fit:cover;object-position:center 55%}
-.feature .cap{position:absolute;left:var(--pad);right:var(--pad);bottom:var(--pad);display:flex;justify-content:space-between;align-items:end;gap:20px}
-@media(max-width:640px){.feature img{aspect-ratio:4/3}}
+.feature{position:relative;margin:clamp(28px,5vw,70px) 0 0;background:var(--paper)}
+.slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab}
+.slides::-webkit-scrollbar{display:none}
+.slides.drag{cursor:grabbing;scroll-snap-type:none}
+.slides figure{flex:0 0 100%;margin:0;scroll-snap-align:start}
+.slides img{width:100%;height:min(72vh,52vw);object-fit:contain;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.feature .cap{display:flex;justify-content:space-between;align-items:end;gap:20px;padding:14px var(--pad) 0}
+.feature .ctl{display:flex;gap:18px;align-items:center}
+.feature .ctl span{color:var(--mute)}
+@media(max-width:640px){.slides img{height:auto;aspect-ratio:4/3}.feature .ctl{gap:12px}}
 
 /* section heads */
 .sh{display:flex;justify-content:space-between;align-items:baseline;padding:clamp(48px,7vw,110px) var(--pad) 18px;border-bottom:1px solid var(--line)}

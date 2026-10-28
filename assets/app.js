@@ -68,3 +68,33 @@
   /* deep link ?color=stone */
   var q=new URLSearchParams(location.search).get('color');if(q==='stone')setColor('stone');
 })();
+
+/* header: brackets follow the active section (Shop / About) */
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.nl'));if(!links.length)return;
+  function set(k){links.forEach(function(a){a.classList.toggle('on',a.dataset.nav===k);});}
+  set(location.hash==='#about'?'about':'shop');
+  links.forEach(function(a){a.addEventListener('click',function(){set(a.dataset.nav);});});
+  var ab=document.getElementById('about');
+  if(ab&&'IntersectionObserver' in window){
+    new IntersectionObserver(function(es){es.forEach(function(e){set(e.isIntersecting?'about':'shop');});},{rootMargin:'-30% 0px -30% 0px'}).observe(ab);
+  }
+})();
+
+/* hero slider (swipe, drag, buttons, keys) */
+(function(){
+  var s=document.getElementById('slides');if(!s)return;
+  var n=s.children.length,cnt=document.getElementById('count');
+  function idx(){return Math.round(s.scrollLeft/s.clientWidth);}
+  function pad(x){return (x<10?'0':'')+x;}
+  function upd(){cnt.textContent=pad(idx()+1)+' / '+pad(n);}
+  function go(k){k=(k+n)%n;s.scrollTo({left:k*s.clientWidth,behavior:'smooth'});}
+  document.getElementById('prev').addEventListener('click',function(){go(idx()-1);});
+  document.getElementById('next').addEventListener('click',function(){go(idx()+1);});
+  s.addEventListener('scroll',upd,{passive:true});
+  var down=false,x0=0,l0=0,moved=0;
+  s.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse')return;down=true;moved=0;x0=e.clientX;l0=s.scrollLeft;s.classList.add('drag');});
+  addEventListener('pointermove',function(e){if(!down)return;moved=e.clientX-x0;s.scrollLeft=l0-moved;});
+  addEventListener('pointerup',function(){if(!down)return;down=false;s.classList.remove('drag');var k=Math.round(l0/s.clientWidth);if(Math.abs(moved)>50)k+=moved<0?1:-1;go(Math.max(0,Math.min(n-1,k)));});
+  s.tabIndex=0;s.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(idx()+1);if(e.key==='ArrowLeft')go(idx()-1);});
+})();
